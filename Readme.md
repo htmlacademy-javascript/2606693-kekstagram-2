@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Олег Власов](https://up.htmlacademy.ru/javascript-individual/2/user/2606693).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Лепёшкин](https://htmlacademy.ru/profile/spearance).
 
 ---
 
