@@ -6,4 +6,7 @@ const getRandomInteger = (a, b) => {
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-export {getRandomInteger, getRandomArrayElement};
+const createCustomLengthArray = (length = 0, callback = () => {}) =>
+  Array.from({ length }, (_, i) => callback(i + 1));
+
+export {getRandomInteger, getRandomArrayElement, createCustomLengthArray};
