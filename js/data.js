@@ -25,24 +25,24 @@ const NAMES = [
 
 const PHOTOS_COUNT = 25;
 
-const likesCount = {
+const LikesCount = {
   MIN: 15,
   MAX: 200
 };
 
-const commentsCount = {
+const CommentsCount = {
   MIN: 0,
   MAX: 30
 };
 
-const avatarsCount = {
+const AvatarsCount = {
   MIN: 1,
   MAX: 6
 };
 
 const createCommentObject = (id = 0) => ({
   id,
-  avatar: `img/avatar-${getRandomInteger(avatarsCount.MIN, avatarsCount.MAX)}.svg`,
+  avatar: `img/avatar-${getRandomInteger(AvatarsCount.MIN, AvatarsCount.MAX)}.svg`,
   message:getRandomArrayElement(MESSAGES),
   name: getRandomArrayElement(NAMES),
 });
@@ -51,8 +51,8 @@ const createPhotoObject = (id = 0) => ({
   id,
   url: `photos/${id}.jpg`,
   description: `Фотография №${id}.`,
-  likes: getRandomInteger(likesCount.MIN, likesCount.MAX),
-  comments: createCustomLengthArray(getRandomInteger(commentsCount.MIN, commentsCount.MAX), createCommentObject),
+  likes: getRandomInteger(LikesCount.MIN, LikesCount.MAX),
+  comments: createCustomLengthArray(getRandomInteger(CommentsCount.MIN, CommentsCount.MAX), createCommentObject),
 });
 
 const createMockData = () => createCustomLengthArray(PHOTOS_COUNT, createPhotoObject);
