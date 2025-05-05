@@ -1,3 +1,4 @@
+/* [2.33. Нужно больше функций] */
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 const isPalindrome = (string) => {
@@ -27,3 +28,18 @@ extractNumbers('а я томат');
 extractNumbers(2023);
 extractNumbers(-1);
 extractNumbers(1.5);
+
+/* [5.16. Функции возвращаются] */
+const isMeetingPossible = (workStart, workEnd, meetingStart, meetingLength) => {
+  // деструктурирует массив строк типа '00:00' в переменные с числом минут с начала дня
+  const [workStartInMinutes, workEndInMinutes, meetingStartInMinutes] = [workStart, workEnd, meetingStart]
+    .map((string) => string.split(':').reduce((hours, minutes) => parseInt(hours, 10) * 60 + parseInt(minutes, 10)));
+  const meetingEndInMinutes = meetingStartInMinutes + meetingLength;
+  return workStartInMinutes <= meetingStartInMinutes && workEndInMinutes >= meetingEndInMinutes;
+};
+
+isMeetingPossible('08:00', '17:30', '14:00', 90);
+isMeetingPossible('8:0', '10:0', '8:0', 120);
+isMeetingPossible('08:00', '14:30', '14:00', 90);
+isMeetingPossible('14:00', '17:30', '08:0', 90);
+isMeetingPossible('8:00', '17:30', '08:00', 900);
