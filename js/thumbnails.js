@@ -7,15 +7,15 @@ const template = document.querySelector('#picture').content.querySelector('.pict
 const fragment = document.createDocumentFragment();
 
 const createThumbnailElement = ({url, description, comments, likes}, 	boilerplate) => {
-  const thumbnaiElement = boilerplate.cloneNode(true);
-  const thumbnailImage = thumbnaiElement.querySelector('.picture__img');
+  const thumbnailElement = boilerplate.cloneNode(true);
+  const thumbnailImage = thumbnailElement.querySelector('.picture__img');
 
   thumbnailImage.src = url;
   thumbnailImage.alt = description;
-  thumbnaiElement.querySelector('.picture__comments').textContent = comments.length;
-  thumbnaiElement.querySelector('.picture__likes').textContent = likes;
+  thumbnailElement.querySelector('.picture__comments').textContent = comments.length;
+  thumbnailElement.querySelector('.picture__likes').textContent = likes;
 
-  return thumbnaiElement;
+  return thumbnailElement;
 };
 
 fragment.append(...photosData.map((photosDataItem) => createThumbnailElement(photosDataItem, template)));
