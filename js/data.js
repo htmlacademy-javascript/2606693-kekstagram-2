@@ -1,5 +1,7 @@
 import {getRandomArrayElement, getRandomInteger, createCustomLengthArray} from './util.js';
 
+const PHOTOS_COUNT = 25;
+
 const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -22,8 +24,6 @@ const NAMES = [
   'Полина',
   'Сергей',
 ];
-
-const PHOTOS_COUNT = 25;
 
 const LikesCount = {
   MIN: 15,
