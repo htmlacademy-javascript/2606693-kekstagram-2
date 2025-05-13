@@ -9,4 +9,14 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 const createCustomLengthArray = (length = 0, callback = () => {}) =>
   Array.from({ length }, (_, i) => callback(i + 1));
 
-export {getRandomInteger, getRandomArrayElement, createCustomLengthArray};
+const getArrayItemById = (array = [], id = '') => array.find((item) => String(item.id) === String(id));
+
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {
+  getRandomInteger,
+  getRandomArrayElement,
+  createCustomLengthArray,
+  getArrayItemById,
+  isEscapeKey
+};

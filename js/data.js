@@ -1,6 +1,6 @@
 import {getRandomArrayElement, getRandomInteger, createCustomLengthArray} from './util.js';
 
-const PHOTOS_COUNT = 25;
+const POSTS_COUNT = 25;
 
 const MESSAGES = [
   'Всё отлично!',
@@ -47,7 +47,7 @@ const createCommentObject = (id = 0) => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const createPhotoObject = (id = 0) => ({
+const createPostObject = (id = 0) => ({
   id,
   url: `photos/${id}.jpg`,
   description: `Фотография №${id}.`,
@@ -55,6 +55,6 @@ const createPhotoObject = (id = 0) => ({
   comments: createCustomLengthArray(getRandomInteger(CommentsCount.MIN, CommentsCount.MAX), createCommentObject),
 });
 
-const createMockData = () => createCustomLengthArray(PHOTOS_COUNT, createPhotoObject);
+const createMockData = () => createCustomLengthArray(POSTS_COUNT, createPostObject);
 
 export {createMockData};

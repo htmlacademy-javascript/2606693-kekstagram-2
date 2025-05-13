@@ -1,23 +1,25 @@
-const createThumbnailElement = ({url, description, comments, likes}, 	template) => {
+const renderThumbnailElement = (postsDataItem, template) => {
+  const {url, description, comments, likes, id} = postsDataItem;
   const thumbnailElement = template.cloneNode(true);
-  const thumbnailImage = thumbnailElement.querySelector('.picture__img');
+  const thumbnailImageElement = thumbnailElement.querySelector('.picture__img');
 
-  thumbnailImage.src = url;
-  thumbnailImage.alt = description;
+  thumbnailImageElement.src = url;
+  thumbnailImageElement.alt = description;
   thumbnailElement.querySelector('.picture__comments').textContent = comments.length;
   thumbnailElement.querySelector('.picture__likes').textContent = likes;
+  thumbnailElement.dataset.id = id;
 
   return thumbnailElement;
 };
 
-const createThumbnails = (photosData) => {
+const renderThumbnails = (postsData) => {
   const thumbnailsContainer = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragment = document.createDocumentFragment();
 
-  fragment.append(...photosData.map((photosDataItem) => createThumbnailElement(photosDataItem, template)));
+  fragment.append(...postsData.map((postsDataItem) => renderThumbnailElement(postsDataItem, template)));
   thumbnailsContainer.append(fragment);
 };
 
-export {createThumbnails, createThumbnailElement};
+export {renderThumbnails, renderThumbnailElement};
 
