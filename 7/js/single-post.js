@@ -15,7 +15,7 @@ const closePostElement = postElement.querySelector('.big-picture__cancel');
 const commentTemplate = commentsContainer.querySelector('.social__comment');
 
 let visibleCommentsCount = COMMENTS_TO_SHOW_COUNT;
-let postData = [];
+let postData = null;
 
 function setSinglePost (postsData) {
   const thumbnailsContainer = document.querySelector('.pictures');
