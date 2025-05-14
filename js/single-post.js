@@ -1,4 +1,4 @@
-import {getArrayItemById, isEscapeKey} from './util.js';
+import {getArrayItemById, isEscapeKey, createFragment} from './util.js';
 
 const COMMENTS_SHOWN_COUNT = 5;
 
@@ -59,9 +59,7 @@ function renderPost (postData) {
 function renderComments (commentsData) {
   const commentsContainer = postElement.querySelector('.social__comments');
   const template = commentsContainer.querySelector('.social__comment');
-  const fragment = document.createDocumentFragment();
-
-  fragment.append(...commentsData.map((commentsDataItem) => renderCommentElement(commentsDataItem, template)));
+  const fragment = createFragment(commentsData, template, renderCommentElement);
   commentsContainer.replaceChildren(fragment);
 }
 
