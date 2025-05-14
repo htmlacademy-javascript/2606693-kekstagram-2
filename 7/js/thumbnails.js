@@ -1,3 +1,5 @@
+import {createFragment} from './util.js';
+
 const renderThumbnailElement = (postsDataItem, template) => {
   const {url, description, comments, likes, id} = postsDataItem;
   const thumbnailElement = template.cloneNode(true);
@@ -15,11 +17,9 @@ const renderThumbnailElement = (postsDataItem, template) => {
 const renderThumbnails = (postsData) => {
   const thumbnailsContainer = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
-  const fragment = document.createDocumentFragment();
-
-  fragment.append(...postsData.map((postsDataItem) => renderThumbnailElement(postsDataItem, template)));
+  const fragment = createFragment(postsData, template, renderThumbnailElement);
   thumbnailsContainer.append(fragment);
 };
 
-export {renderThumbnails, renderThumbnailElement};
+export {renderThumbnails};
 

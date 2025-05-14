@@ -13,10 +13,17 @@ const getArrayItemById = (array = [], id = '') => array.find((item) => String(it
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
+const createFragment = (data, template, callback) => {
+  const fragment = document.createDocumentFragment();
+  fragment.append(...data.map((item) => callback(item, template)));
+  return fragment;
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createCustomLengthArray,
   getArrayItemById,
-  isEscapeKey
+  isEscapeKey,
+  createFragment
 };
