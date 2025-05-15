@@ -1,4 +1,4 @@
-import {getArrayItemById, isEscapeKey, createFragment} from './util.js';
+import {isEscapeKey, createFragment} from './util.js';
 
 const COMMENTS_TO_SHOW_COUNT = 5;
 
@@ -6,7 +6,6 @@ const postElement = document.querySelector('.big-picture');
 const postImageElement = postElement.querySelector('.big-picture__img > img');
 const likesElement = postElement.querySelector('.likes-count');
 const captionElement = postElement.querySelector('.social__caption');
-const commentsCountElement = postElement.querySelector('.social__comment-count');
 const commentsShownElement = postElement.querySelector('.social__comment-shown-count');
 const commentsTotalElement = postElement.querySelector('.social__comment-total-count');
 const commentsLoaderElement = postElement.querySelector('.comments-loader');
@@ -15,26 +14,12 @@ const closePostElement = postElement.querySelector('.big-picture__cancel');
 const commentTemplate = commentsContainer.querySelector('.social__comment');
 
 let visibleCommentsCount = COMMENTS_TO_SHOW_COUNT;
-let postData = null;
+let postData;
 
-function setSinglePost (postsData) {
-  const thumbnailsContainer = document.querySelector('.pictures');
+commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);
 
-  thumbnailsContainer.addEventListener('click', (evt) => {
-    const thumbnailElement = evt.target.closest('.picture');
-    if(thumbnailElement) {
-      postData = getArrayItemById(postsData, thumbnailElement.dataset.id);
-
-      /* <<< Удалить для module8-task2 [Открывается и закрывается (часть 2)] */
-      visibleCommentsCount = postData.comments.length;
-      /* Удалить для module8-task2 [Открывается и закрывается (часть 2)] >>> */
-
-      openPost();
-    }
-  });
-}
-
-function openPost () {
+function openPost (data) {
+  postData = data;
   renderPost(postData);
 
   postElement.classList.remove('hidden');
@@ -61,10 +46,6 @@ function renderPost () {
   renderCommentsCount();
   renderCommentsList();
   renderCommentsLoader();
-
-  /* <<< Удалить для module8-task2 [Открывается и закрывается (часть 2)] */
-  commentsCountElement.classList.add('hidden');
-  /* Удалить для module8-task2 [Открывается и закрывается (часть 2)] >>> */
 }
 
 function renderCommentElement (commentsDataItem, template) {
@@ -94,7 +75,6 @@ function renderCommentsLoader () {
     commentsLoaderElement.classList.add('hidden');
   } else {
     commentsLoaderElement.classList.remove('hidden');
-    commentsLoaderElement.addEventListener('click', onCommentsLoaderClick, {once: true});
   }
 }
 
@@ -116,4 +96,4 @@ function onClosePostElementClick () {
   closePost();
 }
 
-export {setSinglePost};
+export {openPost};
