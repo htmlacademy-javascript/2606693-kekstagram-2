@@ -17,10 +17,17 @@ const createFragment = (data, template, callback) => {
   return fragment;
 };
 
+const toggleClass = (element, className = '') => {
+  if (element) {
+    element.classList.toggle(className);
+  }
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createCustomLengthArray,
   isEscapeKey,
-  createFragment
+  createFragment,
+  toggleClass
 };
