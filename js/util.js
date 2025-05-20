@@ -9,8 +9,6 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 const createCustomLengthArray = (length = 0, callback = () => {}) =>
   Array.from({ length }, (_, i) => callback(i + 1));
 
-const getArrayItemById = (array = [], id = '') => array.find((item) => String(item.id) === String(id));
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const createFragment = (data, template, callback) => {
@@ -19,11 +17,17 @@ const createFragment = (data, template, callback) => {
   return fragment;
 };
 
+const toggleClass = (element, className = '') => {
+  if (element) {
+    element.classList.toggle(className);
+  }
+};
+
 export {
   getRandomInteger,
   getRandomArrayElement,
   createCustomLengthArray,
-  getArrayItemById,
   isEscapeKey,
-  createFragment
+  createFragment,
+  toggleClass
 };
