@@ -1,7 +1,7 @@
 import {toggleClass, isEscapeKey} from './util.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
-const MAX_HASTAGS_COUNT = 5;
+const MAX_HASHTAGS_COUNT = 5;
 
 const HashtagLength = {
   MIN: 2,
@@ -15,19 +15,22 @@ const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
 
-const pristine = new Pristine(
-  uploadFormElement,
-  {
-    classTo: 'img-upload__field-wrapper',
-    errorClass: 'img-upload__field-wrapper--error',
-    errorTextParent: 'img-upload__field-wrapper',
-  }
-);
-
-const errorMessages = {
-  description: '',
-  hashtags: ''
+const validationManager = {
+  handleValidation() {
+    return new Pristine(
+      uploadFormElement,
+      {
+        classTo: 'img-upload__field-wrapper',
+        errorClass: 'img-upload__field-wrapper--error',
+        errorTextParent: 'img-upload__field-wrapper',
+      }
+    );
+  },
+  descriptionError: '',
+  hashtagsError: ''
 };
+
+let validationHandler;
 
 function toggleModal () {
   toggleClass(overlayElement, 'hidden');
@@ -36,14 +39,17 @@ function toggleModal () {
 
 function openForm () {
   toggleModal();
+
   document.addEventListener('keydown', onDocumentKeydown);
 }
 
 function closeForm () {
   uploadInputElement.value = '';
   uploadFormElement.reset();
-  pristine.reset();
+  validationHandler.reset();
+
   toggleModal();
+
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
@@ -67,21 +73,21 @@ function onCloseOverlayElementClick () {
 
 function onUploadFormSubmit (evt) {
   evt.preventDefault();
-  if (pristine.validate()) {
+  if (validationHandler.validate()) {
     uploadFormElement.submit();
   }
 }
 
 function validateDescription (value) {
   if (value.length > MAX_DESCRIPTION_LENGTH) {
-    errorMessages.description = `Длина комментария должна быть не больше ${MAX_DESCRIPTION_LENGTH} символов`;
+    validationManager.descriptionError = `Длина комментария должна быть не больше ${MAX_DESCRIPTION_LENGTH} символов`;
     return false;
   }
   return true;
 }
 
 function getDescriptionErrorMessage () {
-  return errorMessages.description;
+  return validationManager.descriptionError;
 }
 
 function validateHashtags (value) {
@@ -94,13 +100,13 @@ function validateHashtags (value) {
 
   switch (true) {
     case !hashtags.every((hashtag) => hashtagRegexp.test(hashtag)):
-      errorMessages.hashtags = `Хэштеги начинаются с #, разделены пробелами, длина от ${HashtagLength.MIN} до ${HashtagLength.MAX} символов`;
+      validationManager.hashtagsError = `Хэштеги начинаются с #, разделены пробелами, длина от ${HashtagLength.MIN} до ${HashtagLength.MAX} символов`;
       return false;
     case new Set(hashtags).size !== hashtags.length:
-      errorMessages.hashtags = 'Один и тот же хэштег не может быть использован дважды';
+      validationManager.hashtagsError = 'Один и тот же хэштег не может быть использован дважды';
       return false;
-    case hashtags.length > MAX_HASTAGS_COUNT:
-      errorMessages.hashtags = 'Нельзя указывать больше пяти хэштегов';
+    case hashtags.length > MAX_HASHTAGS_COUNT:
+      validationManager.hashtagsError = 'Нельзя указывать больше пяти хэштегов';
       return false;
     default:
       return true;
@@ -108,17 +114,18 @@ function validateHashtags (value) {
 }
 
 function getHashtagsErrorMessage () {
-  return errorMessages.hashtags;
+  return validationManager.hashtagsError;
 }
 
 function initUploadForm () {
   uploadInputElement.addEventListener('change', onInputElementChange);
   closeOverlayElement.addEventListener('click', onCloseOverlayElementClick);
   uploadFormElement.addEventListener('submit', onUploadFormSubmit);
-}
 
-pristine.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
-pristine.addValidator(hashtagsInputElement, validateHashtags, getHashtagsErrorMessage);
+  validationHandler = validationManager.handleValidation();
+  validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
+  validationHandler.addValidator(hashtagsInputElement, validateHashtags, getHashtagsErrorMessage);
+}
 
 export {initUploadForm};
 
