@@ -78,6 +78,10 @@ function onUploadFormSubmit (evt) {
   }
 }
 
+function onHashtagsElementFocus () {
+  hashtagsInputElement.value = hashtagsInputElement.value || '#';
+}
+
 function validateDescription (value) {
   if (value.length > MAX_DESCRIPTION_LENGTH) {
     validationManager.descriptionError = `Длина комментария должна быть не больше ${MAX_DESCRIPTION_LENGTH} символов`;
@@ -121,6 +125,7 @@ function initUploadForm () {
   uploadInputElement.addEventListener('change', onInputElementChange);
   closeOverlayElement.addEventListener('click', onCloseOverlayElementClick);
   uploadFormElement.addEventListener('submit', onUploadFormSubmit);
+  hashtagsInputElement.addEventListener('focus', onHashtagsElementFocus);
 
   validationHandler = validationManager.handleValidation();
   validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
