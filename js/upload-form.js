@@ -32,18 +32,18 @@ const validationManager = {
 
 let validationHandler;
 
-function toggleModal () {
+const toggleModal = () => {
   toggleClass(overlayElement, 'hidden');
   toggleClass(document.body, 'modal-open');
-}
+};
 
-function openForm () {
+const openForm = () => {
   toggleModal();
 
   document.addEventListener('keydown', onDocumentKeydown);
-}
+};
 
-function closeForm () {
+const closeForm = () => {
   uploadInputElement.value = '';
   uploadFormElement.reset();
   validationHandler.reset();
@@ -51,50 +51,41 @@ function closeForm () {
   toggleModal();
 
   document.removeEventListener('keydown', onDocumentKeydown);
-}
+};
 
 function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) && document.activeElement !== hashtagsInputElement && document.activeElement !== descriptionInputElement) {
     evt.preventDefault();
-    if (document.activeElement === hashtagsInputElement || document.activeElement === descriptionInputElement) {
-      return;
-    }
     closeForm();
   }
 }
 
-function onInputElementChange () {
+const onUploadInputChange = () => {
   openForm();
-}
+};
 
-function onCloseOverlayElementClick () {
+const onCloseOverlayClick = () => {
   closeForm();
-}
+};
 
-function onUploadFormSubmit (evt) {
+const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   if (validationHandler.validate()) {
     uploadFormElement.submit();
   }
-}
+};
 
-function onHashtagsElementFocus () {
-  hashtagsInputElement.value = hashtagsInputElement.value || '#';
-}
-
-function validateDescription (value) {
+const validateDescription = (value) => {
   if (value.length > MAX_DESCRIPTION_LENGTH) {
     validationManager.descriptionError = `Длина комментария должна быть не больше ${MAX_DESCRIPTION_LENGTH} символов`;
     return false;
   }
   return true;
-}
+};
 
-function getDescriptionErrorMessage () {
-  return validationManager.descriptionError;
-}
+const getDescriptionErrorMessage = () => validationManager.descriptionError;
 
-function validateHashtags (value) {
+const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().trim().split(/\s+/);
   const hashtagRegexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
@@ -115,22 +106,19 @@ function validateHashtags (value) {
     default:
       return true;
   }
-}
+};
 
-function getHashtagsErrorMessage () {
-  return validationManager.hashtagsError;
-}
+const getHashtagsErrorMessage = () => validationManager.hashtagsError;
 
-function initUploadForm () {
-  uploadInputElement.addEventListener('change', onInputElementChange);
-  closeOverlayElement.addEventListener('click', onCloseOverlayElementClick);
+const initUploadForm = () => {
+  uploadInputElement.addEventListener('change', onUploadInputChange);
+  closeOverlayElement.addEventListener('click', onCloseOverlayClick);
   uploadFormElement.addEventListener('submit', onUploadFormSubmit);
-  hashtagsInputElement.addEventListener('focus', onHashtagsElementFocus);
 
   validationHandler = validationManager.handleValidation();
   validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
   validationHandler.addValidator(hashtagsInputElement, validateHashtags, getHashtagsErrorMessage);
-}
+};
 
 export {initUploadForm};
 
