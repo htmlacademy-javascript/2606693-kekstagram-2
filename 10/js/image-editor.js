@@ -132,8 +132,10 @@ const initSlider = () => {
   });
 
   sliderElement.noUiSlider.on('update', () => {
-    effectLevelElement.value = sliderElement.noUiSlider.get();
-    scaleImageElement.style.filter = activeEffect ? `${activeEffect.setFilter(effectLevelElement.value)}` : '';
+    if (activeEffect) {
+      effectLevelElement.value = sliderElement.noUiSlider.get();
+      scaleImageElement.style.filter = activeEffect.setFilter(effectLevelElement.value);
+    }
   });
 
   effectElements.forEach((effectElement) => effectElement.addEventListener('click', onEffectClick));
@@ -153,7 +155,7 @@ function onEffectClick () {
   }
   sliderContainer.style.display = '';
   sliderElement.noUiSlider.updateOptions(activeEffect.options);
-  scaleImageElement.style.filter = `${activeEffect.setFilter(activeEffect.options.start)})`;
+  scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
 }
 
 const resetImageEditor = () => {
