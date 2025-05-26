@@ -8,6 +8,7 @@ const overlayElement = uploadFormElement.querySelector('.img-upload__overlay');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
+const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
 let validationHandler;
 
@@ -25,6 +26,7 @@ const openForm = () => {
 const closeForm = () => {
   uploadInputElement.value = '';
   uploadFormElement.reset();
+  uploadButtonElement.disabled = false;
 
   validationHandler.reset();
   resetImageEditor();
