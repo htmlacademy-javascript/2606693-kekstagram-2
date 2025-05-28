@@ -1,5 +1,5 @@
-import {closeForm} from './upload-form';
-import {isEscapeKey} from './util';
+import {closeForm} from './upload-form.js';
+import {isEscapeKey} from './util.js';
 
 const SHOW_NOTIFICATION_TIME = 5000;
 
