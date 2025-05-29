@@ -1,8 +1,13 @@
-const IMAGE_SCALE_STEP = 25;
-
 const ScaleValue = {
   MIN: 25,
-  MAX: 100
+  MAX: 100,
+  STEP: 25
+};
+
+const SliderValue = {
+  MIN: 0,
+  MAX: 100,
+  STEP: 1
 };
 
 const effects = [
@@ -68,8 +73,7 @@ const effects = [
   }
 ];
 
-const scaleControlSmallerElement = document.querySelector('.scale__control--smaller');
-const scaleControlBiggerElement = document.querySelector('.scale__control--bigger');
+const scaleControlElement = document.querySelector('.scale');
 const scaleControlValueElement = document.querySelector('.scale__control--value');
 const scaleImageElement = document.querySelector('.img-upload__preview > img');
 const effectLevelElement = document.querySelector('.effect-level__value');
@@ -78,56 +82,33 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const effectElements = document.querySelectorAll('.effects__radio');
 
 let activeEffect = null;
+let imageScale = ScaleValue.MAX;
 
-const updateScale = (value) => {
-  scaleControlValueElement.value = `${value}%`;
-  scaleImageElement.style.transform = `scale(${value / 100})`;
-};
-
-const onScaleControlSmallerClick = () => {
-  const newValue = parseInt(scaleControlValueElement.value, 10) - IMAGE_SCALE_STEP;
-  if (newValue >= ScaleValue.MIN) {
-    updateScale(newValue);
+function onScaleControlElementClick (evt) {
+  if (evt.target.closest('.scale__control--smaller')) {
+    imageScale = Math.max(ScaleValue.MIN, imageScale - ScaleValue.STEP);
   }
-};
-
-const onScaleControlBiggerClick = () => {
-  const newValue = parseInt(scaleControlValueElement.value, 10) + IMAGE_SCALE_STEP;
-  if (newValue <= ScaleValue.MAX) {
-    updateScale(newValue);
+  if (evt.target.closest('.scale__control--bigger')) {
+    imageScale = Math.min(ScaleValue.MAX, imageScale + ScaleValue.STEP);
   }
-};
-
-const initScaleControl = () => {
-  scaleControlSmallerElement.addEventListener('click', onScaleControlSmallerClick);
-  scaleControlBiggerElement.addEventListener('click', onScaleControlBiggerClick);
-};
-
-const resetScaleControl = () => {
-  scaleImageElement.style.transform = '';
-};
+  scaleControlValueElement.value = `${imageScale}%`;
+  scaleImageElement.style.transform = `scale(${imageScale / 100})`;
+}
 
 const initSlider = () => {
   sliderContainer.style.display = 'none';
 
   noUiSlider.create(sliderElement, {
     range: {
-      min: 0,
-      max: 100,
+      min: SliderValue.MIN,
+      max: SliderValue.MAX,
     },
-    start: 100,
-    step: 1,
+    start: SliderValue.MAX,
+    step: SliderValue.STEP,
     connect: 'lower',
     format: {
-      to: function (value) {
-        if (Number.isInteger(value)) {
-          return value.toFixed(0);
-        }
-        return value.toFixed(1);
-      },
-      from: function (value) {
-        return parseFloat(value);
-      },
+      to: (value) => value.toFixed(parseInt(value, 10) ? 0 : 1),
+      from: (value) => parseFloat(value)
     },
   });
 
@@ -159,13 +140,14 @@ function onEffectClick () {
 }
 
 const resetImageEditor = () => {
-  resetScaleControl();
   resetSlider();
+  imageScale = ScaleValue.MAX;
+  scaleImageElement.style.transform = '';
 };
 
 const initImageEditor = () => {
-  initScaleControl();
   initSlider();
+  scaleControlElement.addEventListener('click', onScaleControlElementClick);
 };
 
 export {initImageEditor, resetImageEditor};

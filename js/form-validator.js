@@ -9,6 +9,9 @@ const HashtagLength = {
 const uploadFormElement = document.querySelector('.img-upload__form');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const descriptionInputElement = uploadFormElement.querySelector('.text__description');
+const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
+
+let validationHandler;
 
 const validationManager = {
   handleValidation() {
@@ -39,7 +42,7 @@ const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().trim().split(/\s+/);
   const hashtagRegexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
-  if (value.length === 0) {
+  if (value.trim().length === 0) {
     return true;
   }
 
@@ -60,10 +63,16 @@ const validateHashtags = (value) => {
 
 const getHashtagsErrorMessage = () => validationManager.hashtagsError;
 
+const onTextInput = () => {
+  uploadButtonElement.disabled = !validationHandler.validate();
+};
+
 const initValidator = () => {
-  const validationHandler = validationManager.handleValidation();
+  validationHandler = validationManager.handleValidation();
   validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
   validationHandler.addValidator(hashtagsInputElement, validateHashtags, getHashtagsErrorMessage);
+  descriptionInputElement.addEventListener('input', onTextInput);
+  hashtagsInputElement.addEventListener('input', onTextInput);
   return validationHandler;
 };
 

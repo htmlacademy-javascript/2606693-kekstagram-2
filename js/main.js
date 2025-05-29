@@ -1,6 +1,9 @@
-import {createMockData} from './data.js';
 import {renderThumbnails} from './thumbnails.js';
 import {initUploadForm} from './upload-form.js';
+import {getData} from './api.js';
+import {onLoadDataError} from './notifications.js';
 
-renderThumbnails(createMockData().slice());
+getData()
+  .then((data) => renderThumbnails(data.slice()))
+  .catch((onLoadDataError));
 initUploadForm();

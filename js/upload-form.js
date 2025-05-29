@@ -1,6 +1,8 @@
 import {toggleClass, isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
 import {initValidator} from './form-validator.js';
+import {sendData} from './api.js';
+import {onSendDataSuccess, onSendDataError} from './notifications.js';
 
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('.img-upload__input');
@@ -8,6 +10,7 @@ const overlayElement = uploadFormElement.querySelector('.img-upload__overlay');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
+const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
 let validationHandler;
 
@@ -19,23 +22,24 @@ const toggleModal = () => {
 const openForm = () => {
   toggleModal();
 
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', onEscKeydown);
 };
 
 const closeForm = () => {
   uploadInputElement.value = '';
   uploadFormElement.reset();
+  uploadButtonElement.disabled = false;
 
   validationHandler.reset();
   resetImageEditor();
 
   toggleModal();
 
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', onEscKeydown);
 };
 
-function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt) && document.activeElement !== hashtagsInputElement && document.activeElement !== descriptionInputElement) {
+function onEscKeydown (evt) {
+  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && document.activeElement !== hashtagsInputElement && document.activeElement !== descriptionInputElement) {
     evt.preventDefault();
     closeForm();
   }
@@ -52,7 +56,11 @@ const onCloseOverlayClick = () => {
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   if (validationHandler.validate()) {
-    uploadFormElement.submit();
+    uploadButtonElement.disabled = true;
+
+    sendData(new FormData(evt.target))
+      .then(onSendDataSuccess)
+      .catch(onSendDataError);
   }
 };
 
@@ -65,6 +73,6 @@ const initUploadForm = () => {
   initImageEditor();
 };
 
-export {initUploadForm};
+export {initUploadForm, closeForm};
 
 
