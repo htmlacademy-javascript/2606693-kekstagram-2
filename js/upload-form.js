@@ -19,6 +19,14 @@ const toggleModal = () => {
   toggleClass(document.body, 'modal-open');
 };
 
+const blockSubmitButton = () => {
+  uploadButtonElement.disabled = true;
+};
+
+const unblockSubmitButton = () => {
+  uploadButtonElement.disabled = false;
+};
+
 const openForm = () => {
   toggleModal();
 
@@ -28,7 +36,7 @@ const openForm = () => {
 const closeForm = () => {
   uploadInputElement.value = '';
   uploadFormElement.reset();
-  uploadButtonElement.disabled = false;
+  unblockSubmitButton();
 
   validationHandler.reset();
   resetImageEditor();
@@ -56,11 +64,12 @@ const onCloseOverlayClick = () => {
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   if (validationHandler.validate()) {
-    uploadButtonElement.disabled = true;
+    blockSubmitButton();
 
     sendData(new FormData(evt.target))
       .then(onSendDataSuccess)
-      .catch(onSendDataError);
+      .catch(onSendDataError)
+      .finally(unblockSubmitButton);
   }
 };
 
