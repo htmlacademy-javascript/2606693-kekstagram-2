@@ -3,8 +3,6 @@ import {isEscapeKey} from './util.js';
 
 const SHOW_NOTIFICATION_TIME = 5000;
 
-const uploadButtonElement = document.querySelector('.img-upload__submit');
-
 let activeNotificationElement;
 let notificationTriggerElement;
 
@@ -23,8 +21,6 @@ const showNotification = (templateSelector, contentSelector, triggerSelector) =>
 const removeNotification = () => {
   notificationTriggerElement = null;
   activeNotificationElement.remove();
-
-  uploadButtonElement.disabled = false;
 
   document.body.classList.toggle('notification-open');
   document.removeEventListener('keydown', onEscKeydown);
