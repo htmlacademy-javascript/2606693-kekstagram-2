@@ -20,7 +20,6 @@ function openPost (data) {
   postData = data;
 
   renderPost(postData);
-
   toggleModal();
 
   document.addEventListener('keydown', onDocumentKeydown);

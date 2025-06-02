@@ -1,4 +1,5 @@
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
+const SUCCESS_LOAD_STATUS = 200;
 
 const Route = {
   GET_DATA: '/data',
@@ -18,7 +19,7 @@ const ErrorText = {
 const load = (route, errorText, method = Method.GET, body = null) =>
   fetch(`${BASE_URL}${route}`, {method, body})
     .then((response) => {
-      if (!response.ok) {
+      if (!response.status === SUCCESS_LOAD_STATUS) {
         throw new Error();
       }
       return response.json();

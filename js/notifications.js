@@ -3,8 +3,6 @@ import {isEscapeKey} from './util.js';
 
 const SHOW_NOTIFICATION_TIME = 5000;
 
-const uploadButtonElement = document.querySelector('.img-upload__submit');
-
 let activeNotificationElement;
 let notificationTriggerElement;
 
@@ -15,7 +13,6 @@ const showNotification = (templateSelector, contentSelector, triggerSelector) =>
 
   activeNotificationElement.addEventListener('click', onNotificationClick);
   document.addEventListener('keydown', onEscKeydown);
-
   document.body.classList.toggle('notification-open');
   document.body.append(activeNotificationElement);
 };
@@ -23,9 +20,6 @@ const showNotification = (templateSelector, contentSelector, triggerSelector) =>
 const removeNotification = () => {
   notificationTriggerElement = null;
   activeNotificationElement.remove();
-
-  uploadButtonElement.disabled = false;
-
   document.body.classList.toggle('notification-open');
   document.removeEventListener('keydown', onEscKeydown);
 };
@@ -46,6 +40,7 @@ const onLoadDataError = () => {
   const template = document.querySelector('#data-error').content.querySelector('.data-error');
   const errorElement = template.cloneNode(true);
   document.body.append(errorElement);
+
   setTimeout(() => {
     errorElement.remove();
   }, SHOW_NOTIFICATION_TIME);
@@ -60,4 +55,4 @@ const onSendDataError = () => {
   showNotification('#error', '.error','.error__button');
 };
 
-export { onLoadDataError, onSendDataSuccess, onSendDataError};
+export {onLoadDataError, onSendDataSuccess, onSendDataError};
