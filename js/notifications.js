@@ -3,6 +3,8 @@ import {isEscapeKey} from './util.js';
 
 const SHOW_NOTIFICATION_TIME = 5000;
 
+let activeToastElement;
+let activeToastTimeoutId;
 let activeNotificationElement;
 let notificationTriggerElement;
 
@@ -24,6 +26,29 @@ const removeNotification = () => {
   document.removeEventListener('keydown', onEscKeydown);
 };
 
+const showToast = (templateSelector, contentSelector, message = '') => {
+  const template = document.querySelector(templateSelector).content.querySelector(contentSelector);
+  activeToastElement = template.cloneNode(true);
+
+  if (message) {
+    const messageElement = document.createElement('h2');
+    messageElement.classList.add(`${contentSelector}__title`);
+    messageElement.textContent = message;
+    activeToastElement.replaceChildren(messageElement);
+  }
+
+  document.body.append(activeToastElement);
+
+  activeToastTimeoutId = setTimeout(() => {
+    activeToastElement.remove();
+  }, SHOW_NOTIFICATION_TIME);
+};
+
+const removeToast = () => {
+  clearTimeout(activeToastTimeoutId);
+  activeToastElement.remove();
+};
+
 function onEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     removeNotification();
@@ -37,13 +62,20 @@ function onNotificationClick (evt) {
 }
 
 const onLoadDataError = () => {
-  const template = document.querySelector('#data-error').content.querySelector('.data-error');
-  const errorElement = template.cloneNode(true);
-  document.body.append(errorElement);
+  showToast('#data-error','.data-error');
+};
 
-  setTimeout(() => {
-    errorElement.remove();
-  }, SHOW_NOTIFICATION_TIME);
+const onLoadFileSuccess = () => {
+  if (activeToastElement) {
+    removeToast();
+  }
+};
+
+const onLoadFileError = () => {
+  if (activeToastElement) {
+    removeToast();
+  }
+  showToast('#data-error','.data-error' ,'Неверный тип загружаемого файла');
 };
 
 const onSendDataSuccess = () => {
@@ -55,4 +87,10 @@ const onSendDataError = () => {
   showNotification('#error', '.error','.error__button');
 };
 
-export {onLoadDataError, onSendDataSuccess, onSendDataError};
+export {
+  onLoadDataError,
+  onSendDataSuccess,
+  onSendDataError,
+  onLoadFileError,
+  onLoadFileSuccess
+};

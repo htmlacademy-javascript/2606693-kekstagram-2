@@ -2,7 +2,9 @@ import {toggleClass, isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
 import {initValidator} from './form-validator.js';
 import {sendData} from './api.js';
-import {onSendDataSuccess, onSendDataError} from './notifications.js';
+import {onSendDataSuccess, onSendDataError, onLoadFileError, onLoadFileSuccess} from './notifications.js';
+
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('.img-upload__input');
@@ -11,6 +13,8 @@ const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
 const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
+const scaleImageElement = uploadFormElement.querySelector('.img-upload__preview > img');
+const effectsPreviewElements = document.querySelectorAll('.effects__preview');
 
 let validationHandler;
 
@@ -53,7 +57,24 @@ function onEscKeydown (evt) {
   }
 }
 
-const onUploadInputChange = () => {
+const onUploadInputChange = (evt) => {
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+  const fileExtension = fileName.split('.').pop();
+  const isFileExtensionValid = FILE_TYPES.includes(fileExtension);
+
+  if (!isFileExtensionValid) {
+    onLoadFileError();
+    uploadInputElement.value = '';
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  scaleImageElement.src = url;
+  effectsPreviewElements.forEach((effectsPreviewElement) => {
+    effectsPreviewElement.style.backgroundImage = `url(${url})`;
+  });
+  onLoadFileSuccess();
   openForm();
 };
 
