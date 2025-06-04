@@ -39,26 +39,53 @@ const validateDescription = (value) => {
 const getDescriptionErrorMessage = () => validationManager.descriptionError;
 
 const validateHashtags = (value) => {
-  const hashtags = value.toLowerCase().trim().split(/\s+/);
-  const hashtagRegexp = /^#[a-zа-яё0-9]{1,19}$/i;
+  validationManager.hashtagsError = '';
 
   if (value.trim().length === 0) {
     return true;
   }
 
-  switch (true) {
-    case !hashtags.every((hashtag) => hashtagRegexp.test(hashtag)):
-      validationManager.hashtagsError = `Хэштеги начинаются с #, разделены пробелами, длина от ${HashtagLength.MIN} до ${HashtagLength.MAX} символов`;
-      return false;
-    case new Set(hashtags).size !== hashtags.length:
-      validationManager.hashtagsError = 'Один и тот же хэштег не может быть использован дважды';
-      return false;
-    case hashtags.length > MAX_HASHTAGS_COUNT:
-      validationManager.hashtagsError = 'Нельзя указывать больше пяти хэштегов';
-      return false;
-    default:
-      return true;
-  }
+  const hashtags = value.toLowerCase().trim().split(/\s+/);
+  const hashtagRegexp = /^#[a-zа-яё0-9]{1,19}$/i;
+  const rules = [
+    {
+      check: hashtags.some((item) => item.indexOf('#', 1) >= 1),
+      error: 'Хэштеги разделяются пробелами'
+    },
+    {
+      check: hashtags.some((item) => item[0] !== '#'),
+      error: 'Хэштег должен начинаться с символа #'
+    },
+    {
+      check: new Set(hashtags).size !== hashtags.length,
+      error: 'Хэштеги не должны повторяться'
+    },
+    {
+      check: hashtags.some((item) => item.length < HashtagLength.MIN),
+      error: `Минимальное количество символов хэштега, включая решетку - ${HashtagLength.MIN}`
+    },
+    {
+      check: hashtags.some((item) => item.length > HashtagLength.MAX),
+      error: `Максимальное количество символов хэштега, включая решетку - ${HashtagLength.MAX}`
+    },
+    {
+      check: hashtags.length > MAX_HASHTAGS_COUNT,
+      error: `Нельзя указывать больше ${MAX_HASHTAGS_COUNT} хэштегов`
+    },
+    {
+      check: hashtags.some((item) => !hashtagRegexp.test(item)),
+      error: 'Хэштег содержит недопустимые символы'
+    }
+  ];
+
+  return rules.every((rule) => {
+    const isInvalid = rule.check;
+    if (isInvalid) {
+      validationManager.hashtagsError = rule.error;
+    }
+    return !isInvalid;
+  });
+
 };
 
 const getHashtagsErrorMessage = () => validationManager.hashtagsError;
