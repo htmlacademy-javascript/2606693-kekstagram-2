@@ -11,10 +11,10 @@ const FilterNames = {
   DISCUSSED: 'filter-discussed'
 };
 
-const FilterFunctions = {
-  DEFAULT: (array) => array.slice(),
-  RANDOM: (array) => array.toSorted(() => 0.5 - Math.random()).slice(0, MAX_RANDOM_POSTS_COUNT),
-  DISCUSSED: (array) => array.toSorted((a, b) => b.comments.length - a.comments.length)
+const filterFunctions = {
+  showDefault: (array) => array.slice(),
+  showRandom: (array) => array.toSorted(() => 0.5 - Math.random()).slice(0, MAX_RANDOM_POSTS_COUNT),
+  showDiscussed: (array) => array.toSorted((a, b) => b.comments.length - a.comments.length)
 };
 
 const filtersSectionElement = document.querySelector('.img-filters');
@@ -26,14 +26,14 @@ let posts = [];
 const renderThumbnailsWithDelay = debounce(renderThumbnails, RENDER_DELAY);
 
 const useFilter = (filter) => {
-  let sortFunction = FilterFunctions.DEFAULT;
+  let sortFunction = filterFunctions.showDefault;
 
   switch (filter) {
     case FilterNames.RANDOM:
-      sortFunction = FilterFunctions.RANDOM;
+      sortFunction = filterFunctions.showRandom;
       break;
     case FilterNames.DISCUSSED:
-      sortFunction = FilterFunctions.DISCUSSED;
+      sortFunction = filterFunctions.showDiscussed;
       break;
   }
 
