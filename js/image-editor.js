@@ -107,7 +107,7 @@ const initSlider = () => {
     step: SliderValue.STEP,
     connect: 'lower',
     format: {
-      to: (value) => value.toFixed(parseInt(value, 10) ? 0 : 1),
+      to: (value) => value.toFixed(Number.isInteger(value) ? 0 : 1),
       from: (value) => parseFloat(value)
     },
   });

@@ -4,14 +4,15 @@ import {initFilters} from './posts-filter.js';
 import {initUploadForm} from './upload-form.js';
 import {onLoadDataError} from './notifications.js';
 
-const initApp = (data) => {
+initUploadForm();
+
+const displayData = (data) => {
   renderThumbnails(data);
   initFilters(data);
-  initUploadForm();
 };
 
 getData()
   .then((data) => {
-    initApp(data.slice());
+    displayData(data.slice());
   })
   .catch((onLoadDataError));

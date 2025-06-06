@@ -44,8 +44,8 @@ const onFiltersContainerClick = (evt) => {
   const targetButtonElement = evt.target.closest('.img-filters__button');
 
   if (targetButtonElement && targetButtonElement !== activeButtonElement) {
-    activeButtonElement.classList.toggle(ACTIVE_BUTTON_CLASS);
-    targetButtonElement.classList.toggle(ACTIVE_BUTTON_CLASS);
+    activeButtonElement.classList.remove(ACTIVE_BUTTON_CLASS);
+    targetButtonElement.classList.add(ACTIVE_BUTTON_CLASS);
     activeButtonElement = targetButtonElement;
 
     useFilter(targetButtonElement.id);

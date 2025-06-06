@@ -9,8 +9,6 @@ const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('.img-upload__input');
 const overlayElement = uploadFormElement.querySelector('.img-upload__overlay');
-const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
-const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
 const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 const scaleImageElement = uploadFormElement.querySelector('.img-upload__preview > img');
@@ -51,7 +49,7 @@ const closeForm = () => {
 };
 
 function onEscKeydown (evt) {
-  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && document.activeElement !== hashtagsInputElement && document.activeElement !== descriptionInputElement) {
+  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
     evt.preventDefault();
     closeForm();
   }
