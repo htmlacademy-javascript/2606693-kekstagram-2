@@ -81,19 +81,14 @@ const sliderContainer = document.querySelector('.img-upload__effect-level');
 const sliderElement = document.querySelector('.effect-level__slider');
 const effectElements = document.querySelectorAll('.effects__radio');
 
-let activeEffect = null;
 let imageScale = ScaleValue.MAX;
+let activeEffect;
 
-function onScaleControlElementClick (evt) {
-  if (evt.target.closest('.scale__control--smaller')) {
-    imageScale = Math.max(ScaleValue.MIN, imageScale - ScaleValue.STEP);
-  }
-  if (evt.target.closest('.scale__control--bigger')) {
-    imageScale = Math.min(ScaleValue.MAX, imageScale + ScaleValue.STEP);
-  }
-  scaleControlValueElement.value = `${imageScale}%`;
-  scaleImageElement.style.transform = `scale(${imageScale / 100})`;
-}
+const resetSlider = () => {
+  activeEffect = null;
+  sliderContainer.classList.add('visually-hidden');
+  scaleImageElement.style.filter = '';
+};
 
 const initSlider = () => {
   sliderContainer.classList.add('visually-hidden');
@@ -122,26 +117,11 @@ const initSlider = () => {
   effectElements.forEach((effectElement) => effectElement.addEventListener('click', onEffectClick));
 };
 
-const resetSlider = () => {
-  activeEffect = null;
-  sliderContainer.classList.add('visually-hidden');
-  scaleImageElement.style.filter = '';
-};
-
-function onEffectClick () {
-  activeEffect = effects.find((effect) => effect.name === this.value);
-  if (!activeEffect) {
-    resetSlider();
-    return;
-  }
-  sliderContainer.classList.remove('visually-hidden');
-  sliderElement.noUiSlider.updateOptions(activeEffect.options);
-  scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
-}
-
 const resetImageEditor = () => {
   resetSlider();
+  effectElements[0].checked = true;
   imageScale = ScaleValue.MAX;
+  scaleControlValueElement.value = `${imageScale}%`;
   scaleImageElement.style.transform = '';
 };
 
@@ -149,6 +129,36 @@ const initImageEditor = () => {
   initSlider();
   scaleControlElement.addEventListener('click', onScaleControlElementClick);
 };
+
+function onScaleControlElementClick (evt) {
+  if (evt.target.closest('.scale__control--smaller')) {
+    imageScale = Math.max(ScaleValue.MIN, imageScale - ScaleValue.STEP);
+  }
+  if (evt.target.closest('.scale__control--bigger')) {
+    imageScale = Math.min(ScaleValue.MAX, imageScale + ScaleValue.STEP);
+  }
+  scaleControlValueElement.value = `${imageScale}%`;
+  scaleImageElement.style.transform = `scale(${imageScale / 100})`;
+}
+
+function onEffectClick (evt) {
+  const effectElementValue = evt.target.value;
+
+  if (effectElementValue === activeEffect?.name) {
+    return;
+  }
+
+  activeEffect = effects.find((effectObject) => effectElementValue === effectObject.name);
+
+  if (!activeEffect) {
+    resetSlider();
+    return;
+  }
+
+  sliderContainer.classList.remove('visually-hidden');
+  sliderElement.noUiSlider.updateOptions(activeEffect.options);
+  scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
+}
 
 export {initImageEditor, resetImageEditor};
 

@@ -3,50 +3,76 @@ import {isEscapeKey} from './util.js';
 
 const SHOW_NOTIFICATION_TIME = 5000;
 
-let activeToastElement;
-let activeToastTimeoutId;
-let activeNotificationElement;
+let toastElement;
+let toastTimeoutId;
+let notificationElement;
 let notificationTriggerElement;
 
 const showNotification = (templateSelector, contentSelector, triggerSelector) => {
   const template = document.querySelector(templateSelector).content.querySelector(contentSelector);
-  activeNotificationElement = template.cloneNode(true);
-  notificationTriggerElement = activeNotificationElement.querySelector(triggerSelector);
+  notificationElement = template.cloneNode(true);
+  notificationTriggerElement = notificationElement.querySelector(triggerSelector);
 
-  activeNotificationElement.addEventListener('click', onNotificationClick);
+  notificationElement.addEventListener('click', onNotificationClick);
   document.addEventListener('keydown', onEscKeydown);
   document.body.classList.toggle('notification-open');
-  document.body.append(activeNotificationElement);
+  document.body.append(notificationElement);
 };
 
 const removeNotification = () => {
   notificationTriggerElement = null;
-  activeNotificationElement.remove();
+  notificationElement.remove();
   document.body.classList.toggle('notification-open');
   document.removeEventListener('keydown', onEscKeydown);
 };
 
 const showToast = (templateSelector, contentSelector, message = '') => {
   const template = document.querySelector(templateSelector).content.querySelector(contentSelector);
-  activeToastElement = template.cloneNode(true);
+  toastElement = template.cloneNode(true);
 
   if (message) {
     const messageElement = document.createElement('h2');
     messageElement.classList.add(`${contentSelector}__title`);
     messageElement.textContent = message;
-    activeToastElement.replaceChildren(messageElement);
+    toastElement.replaceChildren(messageElement);
   }
 
-  document.body.append(activeToastElement);
+  document.body.append(toastElement);
 
-  activeToastTimeoutId = setTimeout(() => {
-    activeToastElement.remove();
+  toastTimeoutId = setTimeout(() => {
+    toastElement.remove();
   }, SHOW_NOTIFICATION_TIME);
 };
 
 const removeToast = () => {
-  clearTimeout(activeToastTimeoutId);
-  activeToastElement.remove();
+  clearTimeout(toastTimeoutId);
+  toastElement.remove();
+};
+
+const showLoadDataError = () => {
+  showToast('#data-error','.data-error');
+};
+
+const showLoadFileSuccess = () => {
+  if (toastTimeoutId) {
+    removeToast();
+  }
+};
+
+const showLoadFileError = () => {
+  if (toastTimeoutId) {
+    removeToast();
+  }
+  showToast('#data-error','.data-error' ,'Неверный тип загружаемого файла');
+};
+
+const showSendDataSuccess = () => {
+  showNotification('#success', '.success', '.success__button');
+  closeForm();
+};
+
+const showSendDataError = () => {
+  showNotification('#error', '.error','.error__button');
 };
 
 function onEscKeydown (evt) {
@@ -56,41 +82,15 @@ function onEscKeydown (evt) {
 }
 
 function onNotificationClick (evt) {
-  if (evt.target === activeNotificationElement || evt.target === notificationTriggerElement) {
+  if (evt.target === notificationElement || evt.target === notificationTriggerElement) {
     removeNotification();
   }
 }
 
-const onLoadDataError = () => {
-  showToast('#data-error','.data-error');
-};
-
-const onLoadFileSuccess = () => {
-  if (activeToastElement) {
-    removeToast();
-  }
-};
-
-const onLoadFileError = () => {
-  if (activeToastElement) {
-    removeToast();
-  }
-  showToast('#data-error','.data-error' ,'Неверный тип загружаемого файла');
-};
-
-const onSendDataSuccess = () => {
-  showNotification('#success', '.success', '.success__button');
-  closeForm();
-};
-
-const onSendDataError = () => {
-  showNotification('#error', '.error','.error__button');
-};
-
 export {
-  onLoadDataError,
-  onSendDataSuccess,
-  onSendDataError,
-  onLoadFileError,
-  onLoadFileSuccess
+  showLoadDataError,
+  showSendDataSuccess,
+  showSendDataError,
+  showLoadFileError,
+  showLoadFileSuccess
 };
