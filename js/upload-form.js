@@ -44,23 +44,7 @@ const closeForm = () => {
   document.removeEventListener('keydown', onEscKeydown);
 };
 
-const initUploadForm = () => {
-  uploadInputElement.addEventListener('change', onUploadInputChange);
-  closeOverlayElement.addEventListener('click', onCloseOverlayClick);
-  uploadFormElement.addEventListener('submit', onUploadFormSubmit);
-
-  validationHandler = initValidator();
-  initImageEditor();
-};
-
-function onEscKeydown (evt) {
-  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
-    evt.preventDefault();
-    closeForm();
-  }
-}
-
-function onUploadInputChange (evt) {
+const onUploadInputChange = (evt) => {
   const file = evt.target.files[0];
   const fileName = file.name.toLowerCase();
   const fileExtension = fileName.split('.').pop();
@@ -82,13 +66,13 @@ function onUploadInputChange (evt) {
   toggleModal();
 
   document.addEventListener('keydown', onEscKeydown);
-}
+};
 
-function onCloseOverlayClick () {
+const onCloseOverlayClick = () => {
   closeForm();
-}
+};
 
-function onUploadFormSubmit(evt) {
+const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
 
   if (validationHandler.validate()) {
@@ -98,6 +82,22 @@ function onUploadFormSubmit(evt) {
       .then(showSendDataSuccess)
       .catch(showSendDataError)
       .finally(unblockSubmitButton);
+  }
+};
+
+const initUploadForm = () => {
+  uploadInputElement.addEventListener('change', onUploadInputChange);
+  closeOverlayElement.addEventListener('click', onCloseOverlayClick);
+  uploadFormElement.addEventListener('submit', onUploadFormSubmit);
+
+  validationHandler = initValidator();
+  initImageEditor();
+};
+
+function onEscKeydown (evt) {
+  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
+    evt.preventDefault();
+    closeForm();
   }
 }
 

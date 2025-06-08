@@ -82,23 +82,23 @@ const closePost = () => {
   document.removeEventListener('keydown', onEscKeydown);
 };
 
-function onEscKeydown (evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closePost();
-  }
-}
-
-function onCommentsLoaderClick () {
+const onCommentsLoaderClick = () => {
   visibleCommentsCount += COMMENTS_TO_SHOW_COUNT;
 
   renderCommentsCount();
   renderCommentsList();
   renderCommentsLoader();
-}
+};
 
-function onClosePostElementClick () {
+const onClosePostElementClick = () => {
   closePost();
+};
+
+function onEscKeydown (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closePost();
+  }
 }
 
 commentsLoaderElement.addEventListener('click', onCommentsLoaderClick);

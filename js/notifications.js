@@ -8,6 +8,19 @@ let toastTimeoutId;
 let notificationElement;
 let notificationTriggerElement;
 
+const removeNotification = () => {
+  notificationTriggerElement = null;
+  notificationElement.remove();
+  document.body.classList.toggle('notification-open');
+  document.removeEventListener('keydown', onEscKeydown);
+};
+
+const onNotificationClick = (evt) => {
+  if (evt.target === notificationElement || evt.target === notificationTriggerElement) {
+    removeNotification();
+  }
+};
+
 const showNotification = (templateSelector, contentSelector, triggerSelector) => {
   const template = document.querySelector(templateSelector).content.querySelector(contentSelector);
   notificationElement = template.cloneNode(true);
@@ -17,13 +30,6 @@ const showNotification = (templateSelector, contentSelector, triggerSelector) =>
   document.addEventListener('keydown', onEscKeydown);
   document.body.classList.toggle('notification-open');
   document.body.append(notificationElement);
-};
-
-const removeNotification = () => {
-  notificationTriggerElement = null;
-  notificationElement.remove();
-  document.body.classList.toggle('notification-open');
-  document.removeEventListener('keydown', onEscKeydown);
 };
 
 const showToast = (templateSelector, contentSelector, message = '') => {
@@ -77,12 +83,6 @@ const showSendDataError = () => {
 
 function onEscKeydown (evt) {
   if (isEscapeKey(evt)) {
-    removeNotification();
-  }
-}
-
-function onNotificationClick (evt) {
-  if (evt.target === notificationElement || evt.target === notificationTriggerElement) {
     removeNotification();
   }
 }

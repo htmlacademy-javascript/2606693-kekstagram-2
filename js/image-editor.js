@@ -91,6 +91,25 @@ const resetSlider = () => {
   scaleImageElement.style.filter = '';
 };
 
+const onEffectClick = (evt) => {
+  const effectElementValue = evt.target.value;
+
+  if (effectElementValue === activeEffect?.name) {
+    return;
+  }
+
+  activeEffect = effects.find((effectObject) => effectElementValue === effectObject.name);
+
+  if (!activeEffect) {
+    resetSlider();
+    return;
+  }
+
+  sliderContainerElement.classList.remove('visually-hidden');
+  sliderElement.noUiSlider.updateOptions(activeEffect.options);
+  scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
+};
+
 const initSlider = () => {
   sliderContainerElement.classList.add('visually-hidden');
 
@@ -118,6 +137,17 @@ const initSlider = () => {
   effectElements.forEach((effectElement) => effectElement.addEventListener('click', onEffectClick));
 };
 
+const onScaleControlElementClick = (evt) => {
+  if (evt.target.closest('.scale__control--smaller')) {
+    imageScale = Math.max(ScaleValue.MIN, imageScale - ScaleValue.STEP);
+  }
+  if (evt.target.closest('.scale__control--bigger')) {
+    imageScale = Math.min(ScaleValue.MAX, imageScale + ScaleValue.STEP);
+  }
+  scaleControlValueElement.value = `${imageScale}%`;
+  scaleImageElement.style.transform = `scale(${imageScale / 100})`;
+};
+
 const resetImageEditor = () => {
   resetSlider();
   imageScale = ScaleValue.MAX;
@@ -130,36 +160,6 @@ const initImageEditor = () => {
   initSlider();
   scaleControlElement.addEventListener('click', onScaleControlElementClick);
 };
-
-function onScaleControlElementClick (evt) {
-  if (evt.target.closest('.scale__control--smaller')) {
-    imageScale = Math.max(ScaleValue.MIN, imageScale - ScaleValue.STEP);
-  }
-  if (evt.target.closest('.scale__control--bigger')) {
-    imageScale = Math.min(ScaleValue.MAX, imageScale + ScaleValue.STEP);
-  }
-  scaleControlValueElement.value = `${imageScale}%`;
-  scaleImageElement.style.transform = `scale(${imageScale / 100})`;
-}
-
-function onEffectClick (evt) {
-  const effectElementValue = evt.target.value;
-
-  if (effectElementValue === activeEffect?.name) {
-    return;
-  }
-
-  activeEffect = effects.find((effectObject) => effectElementValue === effectObject.name);
-
-  if (!activeEffect) {
-    resetSlider();
-    return;
-  }
-
-  sliderContainerElement.classList.remove('visually-hidden');
-  sliderElement.noUiSlider.updateOptions(activeEffect.options);
-  scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
-}
 
 export {initImageEditor, resetImageEditor};
 

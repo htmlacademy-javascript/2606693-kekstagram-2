@@ -16,10 +16,10 @@ const renderThumbnailElement = (post, template) => {
   thumbnailCommentsElement.textContent = comments.length;
   thumbnailLikesElement.textContent = likes;
 
-  function onThumbnailElementClick (evt) {
+  const onThumbnailElementClick = (evt) => {
     evt.preventDefault();
     openPost(post);
-  }
+  };
 
   thumbnailElement.addEventListener('click', onThumbnailElementClick);
 

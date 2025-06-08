@@ -39,14 +39,7 @@ const useFilter = (filterName) => {
   renderThumbnailsDebounced(sortFunction(posts));
 };
 
-const initFilters = (data) => {
-  posts = data;
-
-  filtersSectionElement.classList.remove('img-filters--inactive');
-  filtersContainerElement.addEventListener('click', onFiltersContainerClick);
-};
-
-function onFiltersContainerClick (evt) {
+const onFiltersContainerClick = (evt) => {
   const targetFilterElement = evt.target.closest('.img-filters__button');
 
   if (targetFilterElement && targetFilterElement !== activeFilterElement) {
@@ -56,6 +49,13 @@ function onFiltersContainerClick (evt) {
 
     useFilter(targetFilterElement.id);
   }
-}
+};
+
+const initFilters = (data) => {
+  posts = data;
+
+  filtersSectionElement.classList.remove('img-filters--inactive');
+  filtersContainerElement.addEventListener('click', onFiltersContainerClick);
+};
 
 export {initFilters};

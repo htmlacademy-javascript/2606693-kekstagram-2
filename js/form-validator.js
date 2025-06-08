@@ -90,6 +90,10 @@ const validateHashtags = (value) => {
 
 const getHashtagsErrorMessage = () => validationManager.hashtagsError;
 
+const onTextInput = () => {
+  uploadButtonElement.disabled = !validationHandler.validate();
+};
+
 const initValidator = () => {
   validationHandler = validationManager.validate();
   validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
@@ -98,9 +102,5 @@ const initValidator = () => {
   hashtagsInputElement.addEventListener('input', onTextInput);
   return validationHandler;
 };
-
-function onTextInput() {
-  uploadButtonElement.disabled = !validationHandler.validate();
-}
 
 export {initValidator};
