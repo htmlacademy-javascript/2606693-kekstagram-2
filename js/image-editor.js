@@ -74,24 +74,25 @@ const effects = [
 ];
 
 const scaleControlElement = document.querySelector('.scale');
-const scaleControlValueElement = document.querySelector('.scale__control--value');
+const scaleControlValueElement = scaleControlElement.querySelector('.scale__control--value');
 const scaleImageElement = document.querySelector('.img-upload__preview > img');
-const effectLevelElement = document.querySelector('.effect-level__value');
-const sliderContainer = document.querySelector('.img-upload__effect-level');
-const sliderElement = document.querySelector('.effect-level__slider');
+const sliderContainerElement = document.querySelector('.img-upload__effect-level');
+const effectLevelElement = sliderContainerElement.querySelector('.effect-level__value');
+const sliderElement = sliderContainerElement.querySelector('.effect-level__slider');
 const effectElements = document.querySelectorAll('.effects__radio');
+const defaultEffectElement = document.querySelector('#effect-none');
 
 let imageScale = ScaleValue.MAX;
 let activeEffect;
 
 const resetSlider = () => {
   activeEffect = null;
-  sliderContainer.classList.add('visually-hidden');
+  sliderContainerElement.classList.add('visually-hidden');
   scaleImageElement.style.filter = '';
 };
 
 const initSlider = () => {
-  sliderContainer.classList.add('visually-hidden');
+  sliderContainerElement.classList.add('visually-hidden');
 
   noUiSlider.create(sliderElement, {
     range: {
@@ -119,9 +120,9 @@ const initSlider = () => {
 
 const resetImageEditor = () => {
   resetSlider();
-  effectElements[0].checked = true;
   imageScale = ScaleValue.MAX;
   scaleControlValueElement.value = `${imageScale}%`;
+  defaultEffectElement.checked = true;
   scaleImageElement.style.transform = '';
 };
 
@@ -155,7 +156,7 @@ function onEffectClick (evt) {
     return;
   }
 
-  sliderContainer.classList.remove('visually-hidden');
+  sliderContainerElement.classList.remove('visually-hidden');
   sliderElement.noUiSlider.updateOptions(activeEffect.options);
   scaleImageElement.style.filter = activeEffect.setFilter(activeEffect.options.start);
 }

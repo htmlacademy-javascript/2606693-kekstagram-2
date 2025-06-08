@@ -10,9 +10,9 @@ const commentsShownElement = postElement.querySelector('.social__comment-shown-c
 const commentsTotalElement = postElement.querySelector('.social__comment-total-count');
 const commentsLoaderElement = postElement.querySelector('.comments-loader');
 const postInputElement = postElement.querySelector('.social__footer-text');
-const commentsContainer = postElement.querySelector('.social__comments');
+const commentsContainerElement = postElement.querySelector('.social__comments');
 const closePostElement = postElement.querySelector('.big-picture__cancel');
-const commentTemplate = commentsContainer.querySelector('.social__comment');
+const commentTemplate = commentsContainerElement.querySelector('.social__comment');
 
 let visibleCommentsCount = COMMENTS_TO_SHOW_COUNT;
 let postData;
@@ -51,7 +51,7 @@ const renderCommentElement = (commentsDataItem, template) => {
 
 const renderCommentsList = () => {
   const fragment = createFragment(postData.comments.slice(0, visibleCommentsCount), commentTemplate, renderCommentElement);
-  commentsContainer.replaceChildren(fragment);
+  commentsContainerElement.replaceChildren(fragment);
 };
 
 const renderPost = () => {

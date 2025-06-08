@@ -1,6 +1,8 @@
 import {createFragment} from './util.js';
 import {openPost} from './single-post.js';
 
+const thumbnailsContainerElement = document.querySelector('.pictures');
+
 const renderThumbnailElement = (post, template) => {
   const {url, description, comments, likes} = post;
 
@@ -25,12 +27,11 @@ const renderThumbnailElement = (post, template) => {
 };
 
 const renderThumbnails = (posts) => {
-  const thumbnailsContainer = document.querySelector('.pictures');
   const template = document.querySelector('#picture').content.querySelector('.picture');
   const fragment = createFragment(posts, template, renderThumbnailElement);
 
-  thumbnailsContainer.querySelectorAll('.picture').forEach((thumbnailElement) => thumbnailElement.remove());
-  thumbnailsContainer.append(fragment);
+  thumbnailsContainerElement.querySelectorAll('.picture').forEach((thumbnailElement) => thumbnailElement.remove());
+  thumbnailsContainerElement.append(fragment);
 };
 
 export {renderThumbnails};

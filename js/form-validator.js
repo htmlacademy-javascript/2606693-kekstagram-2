@@ -14,7 +14,7 @@ const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit
 let validationHandler;
 
 const validationManager = {
-  handleValidation() {
+  validate() {
     return new Pristine(
       uploadFormElement,
       {
@@ -91,7 +91,7 @@ const validateHashtags = (value) => {
 const getHashtagsErrorMessage = () => validationManager.hashtagsError;
 
 const initValidator = () => {
-  validationHandler = validationManager.handleValidation();
+  validationHandler = validationManager.validate();
   validationHandler.addValidator(descriptionInputElement, validateDescription, getDescriptionErrorMessage);
   validationHandler.addValidator(hashtagsInputElement, validateHashtags, getHashtagsErrorMessage);
   descriptionInputElement.addEventListener('input', onTextInput);

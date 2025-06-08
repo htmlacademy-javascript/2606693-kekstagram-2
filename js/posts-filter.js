@@ -17,8 +17,8 @@ const filterFunctions = {
 };
 
 const filtersSectionElement = document.querySelector('.img-filters');
-const filtersContainer = filtersSectionElement.querySelector('.img-filters__form');
-let activeFilterElement = filtersContainer.querySelector('.img-filters__button--active');
+const filtersContainerElement = filtersSectionElement.querySelector('.img-filters__form');
+let activeFilterElement = filtersContainerElement.querySelector('.img-filters__button--active');
 
 let posts = [];
 
@@ -43,7 +43,7 @@ const initFilters = (data) => {
   posts = data;
 
   filtersSectionElement.classList.remove('img-filters--inactive');
-  filtersContainer.addEventListener('click', onFiltersContainerClick);
+  filtersContainerElement.addEventListener('click', onFiltersContainerClick);
 };
 
 function onFiltersContainerClick (evt) {
