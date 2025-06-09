@@ -2,12 +2,14 @@ import {toggleClass, isEscapeKey} from './util.js';
 import {initImageEditor, resetImageEditor} from './image-editor.js';
 import {initValidator} from './form-validator.js';
 import {sendData} from './api.js';
-import {onSendDataSuccess, onSendDataError, onLoadFileError, onLoadFileSuccess} from './notifications.js';
+import {showSendDataSuccess, showSendDataError, showLoadFileError, showLoadFileSuccess} from './notifications.js';
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const uploadFormElement = document.querySelector('.img-upload__form');
 const uploadInputElement = uploadFormElement.querySelector('.img-upload__input');
+const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
+const descriptionInputElement = uploadFormElement.querySelector('.text__description');
 const overlayElement = uploadFormElement.querySelector('.img-upload__overlay');
 const closeOverlayElement = uploadFormElement.querySelector('.img-upload__cancel');
 const uploadButtonElement = uploadFormElement.querySelector('.img-upload__submit');
@@ -29,31 +31,18 @@ const unblockSubmitButton = () => {
   uploadButtonElement.disabled = false;
 };
 
-const openForm = () => {
-  toggleModal();
-
-  document.addEventListener('keydown', onEscKeydown);
-};
-
 const closeForm = () => {
   uploadInputElement.value = '';
-  uploadFormElement.reset();
-  unblockSubmitButton();
+  hashtagsInputElement.value = '';
+  descriptionInputElement.value = '';
 
   validationHandler.reset();
+  unblockSubmitButton();
   resetImageEditor();
-
   toggleModal();
 
   document.removeEventListener('keydown', onEscKeydown);
 };
-
-function onEscKeydown (evt) {
-  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
-    evt.preventDefault();
-    closeForm();
-  }
-}
 
 const onUploadInputChange = (evt) => {
   const file = evt.target.files[0];
@@ -62,7 +51,7 @@ const onUploadInputChange = (evt) => {
   const isFileExtensionValid = FILE_TYPES.includes(fileExtension);
 
   if (!isFileExtensionValid) {
-    onLoadFileError();
+    showLoadFileError();
     uploadInputElement.value = '';
     return;
   }
@@ -72,8 +61,11 @@ const onUploadInputChange = (evt) => {
   effectsPreviewElements.forEach((effectsPreviewElement) => {
     effectsPreviewElement.style.backgroundImage = `url(${url})`;
   });
-  onLoadFileSuccess();
-  openForm();
+
+  showLoadFileSuccess();
+  toggleModal();
+
+  document.addEventListener('keydown', onEscKeydown);
 };
 
 const onCloseOverlayClick = () => {
@@ -82,12 +74,13 @@ const onCloseOverlayClick = () => {
 
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
+
   if (validationHandler.validate()) {
     blockSubmitButton();
 
     sendData(new FormData(evt.target))
-      .then(onSendDataSuccess)
-      .catch(onSendDataError)
+      .then(showSendDataSuccess)
+      .catch(showSendDataError)
       .finally(unblockSubmitButton);
   }
 };
@@ -100,6 +93,13 @@ const initUploadForm = () => {
   validationHandler = initValidator();
   initImageEditor();
 };
+
+function onEscKeydown (evt) {
+  if (isEscapeKey(evt) && !document.body.classList.contains('notification-open') && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
+    evt.preventDefault();
+    closeForm();
+  }
+}
 
 export {initUploadForm, closeForm};
 

@@ -1,8 +1,8 @@
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const createFragment = (data, template, callback) => {
+const createFragment = (items, template, callback) => {
   const fragment = document.createDocumentFragment();
-  fragment.append(...data.map((item) => callback(item, template)));
+  fragment.append(...items.map((item) => callback(item, template)));
   return fragment;
 };
 

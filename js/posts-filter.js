@@ -1,7 +1,6 @@
 import {renderThumbnails} from './thumbnails.js';
 import {debounce} from './util.js';
 
-const ACTIVE_BUTTON_CLASS = 'img-filters__button--active';
 const MAX_RANDOM_POSTS_COUNT = 10;
 const RENDER_DELAY = 500;
 
@@ -12,23 +11,23 @@ const FilterNames = {
 };
 
 const filterFunctions = {
-  showDefault: (array) => array.slice(),
-  showRandom: (array) => array.toSorted(() => 0.5 - Math.random()).slice(0, MAX_RANDOM_POSTS_COUNT),
-  showDiscussed: (array) => array.toSorted((a, b) => b.comments.length - a.comments.length)
+  showDefault: (items) => items.slice(),
+  showRandom: (items) => items.toSorted(() => 0.5 - Math.random()).slice(0, MAX_RANDOM_POSTS_COUNT),
+  showDiscussed: (items) => items.toSorted((a, b) => b.comments.length - a.comments.length)
 };
 
 const filtersSectionElement = document.querySelector('.img-filters');
-const filtersContainer = filtersSectionElement.querySelector('.img-filters__form');
-let activeButtonElement = filtersContainer.querySelector(`.${ACTIVE_BUTTON_CLASS}`);
+const filtersContainerElement = filtersSectionElement.querySelector('.img-filters__form');
+let activeFilterElement = filtersContainerElement.querySelector('.img-filters__button--active');
 
 let posts = [];
 
-const renderThumbnailsWithDelay = debounce(renderThumbnails, RENDER_DELAY);
+const renderThumbnailsDebounced = debounce(renderThumbnails, RENDER_DELAY);
 
-const useFilter = (filter) => {
+const useFilter = (filterName) => {
   let sortFunction = filterFunctions.showDefault;
 
-  switch (filter) {
+  switch (filterName) {
     case FilterNames.RANDOM:
       sortFunction = filterFunctions.showRandom;
       break;
@@ -37,18 +36,18 @@ const useFilter = (filter) => {
       break;
   }
 
-  renderThumbnailsWithDelay(sortFunction(posts));
+  renderThumbnailsDebounced(sortFunction(posts));
 };
 
 const onFiltersContainerClick = (evt) => {
-  const targetButtonElement = evt.target.closest('.img-filters__button');
+  const targetFilterElement = evt.target.closest('.img-filters__button');
 
-  if (targetButtonElement && targetButtonElement !== activeButtonElement) {
-    activeButtonElement.classList.remove(ACTIVE_BUTTON_CLASS);
-    targetButtonElement.classList.add(ACTIVE_BUTTON_CLASS);
-    activeButtonElement = targetButtonElement;
+  if (targetFilterElement && targetFilterElement !== activeFilterElement) {
+    activeFilterElement.classList.toggle('img-filters__button--active');
+    targetFilterElement.classList.toggle('img-filters__button--active');
+    activeFilterElement = targetFilterElement;
 
-    useFilter(targetButtonElement.id);
+    useFilter(targetFilterElement.id);
   }
 };
 
@@ -56,7 +55,7 @@ const initFilters = (data) => {
   posts = data;
 
   filtersSectionElement.classList.remove('img-filters--inactive');
-  filtersContainer.addEventListener('click', onFiltersContainerClick);
+  filtersContainerElement.addEventListener('click', onFiltersContainerClick);
 };
 
 export {initFilters};

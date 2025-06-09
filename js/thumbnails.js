@@ -1,19 +1,24 @@
 import {createFragment} from './util.js';
 import {openPost} from './single-post.js';
 
-const renderThumbnailElement = (postsDataItem, template) => {
-  const {url, description, comments, likes} = postsDataItem;
+const thumbnailsContainerElement = document.querySelector('.pictures');
+
+const renderThumbnailElement = (post, template) => {
+  const {url, description, comments, likes} = post;
+
   const thumbnailElement = template.cloneNode(true);
   const thumbnailImageElement = thumbnailElement.querySelector('.picture__img');
+  const thumbnailCommentsElement = thumbnailElement.querySelector('.picture__comments');
+  const thumbnailLikesElement = thumbnailElement.querySelector('.picture__likes');
 
   thumbnailImageElement.src = url;
   thumbnailImageElement.alt = description;
-  thumbnailElement.querySelector('.picture__comments').textContent = comments.length;
-  thumbnailElement.querySelector('.picture__likes').textContent = likes;
+  thumbnailCommentsElement.textContent = comments.length;
+  thumbnailLikesElement.textContent = likes;
 
   const onThumbnailElementClick = (evt) => {
     evt.preventDefault();
-    openPost(postsDataItem);
+    openPost(post);
   };
 
   thumbnailElement.addEventListener('click', onThumbnailElementClick);
@@ -21,13 +26,12 @@ const renderThumbnailElement = (postsDataItem, template) => {
   return thumbnailElement;
 };
 
-const renderThumbnails = (postsData) => {
-  const thumbnailsContainer = document.querySelector('.pictures');
+const renderThumbnails = (posts) => {
   const template = document.querySelector('#picture').content.querySelector('.picture');
-  const fragment = createFragment(postsData, template, renderThumbnailElement);
+  const fragment = createFragment(posts, template, renderThumbnailElement);
 
-  thumbnailsContainer.querySelectorAll('.picture').forEach((thumbnailElement) => thumbnailElement.remove());
-  thumbnailsContainer.append(fragment);
+  thumbnailsContainerElement.querySelectorAll('.picture').forEach((thumbnailElement) => thumbnailElement.remove());
+  thumbnailsContainerElement.append(fragment);
 };
 
 export {renderThumbnails};

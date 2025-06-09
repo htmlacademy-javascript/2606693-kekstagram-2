@@ -2,7 +2,7 @@ import {getData} from './api.js';
 import {renderThumbnails} from './thumbnails.js';
 import {initFilters} from './posts-filter.js';
 import {initUploadForm} from './upload-form.js';
-import {onLoadDataError} from './notifications.js';
+import {showLoadDataError} from './notifications.js';
 
 initUploadForm();
 
@@ -15,4 +15,4 @@ getData()
   .then((data) => {
     displayData(data.slice());
   })
-  .catch((onLoadDataError));
+  .catch((showLoadDataError));
